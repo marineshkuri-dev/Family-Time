@@ -2,50 +2,141 @@
 
 A responsive Hebrew RTL web application for managing family schedules, events and tasks.
 
-## Tech stack
+## 🌐 Live Demo
 
-- **React 19** + **Vite 8**
-- **React Router v7**
-- CSS custom properties — no UI library dependency
-- RTL-first design (Hebrew)
+https://family-time-7jp8-m8hkx7800-family-time.vercel.app
 
-## Getting started
+---
+
+## 📌 Overview
+
+Family Time is a web application that helps families organize their daily life in one place.
+
+The system allows users to manage:
+
+* Events
+* Tasks
+* Family members
+* Shared calendar
+* Recurring events and tasks
+* Profile settings
+
+---
+
+## 🎯 Problem Statement
+
+Families often use multiple tools such as WhatsApp groups, calendars and notes, making coordination difficult.
+
+Family Time centralizes family management into one platform.
+
+---
+
+## 👨‍👩‍👧‍👦 Target Audience
+
+Families who want a simple and organized way to manage:
+
+* Shared schedules
+* Events
+* Tasks
+* Weekly routines
+
+---
+
+## 🚀 Main Features
+
+### Authentication
+
+* Register
+* Login
+* Logout
+* Change password
+
+### Dashboard
+
+* Summary cards
+* Upcoming events
+* Pending tasks
+* Quick navigation
+
+### Events
+
+* Add, edit and delete events
+* Recurring events
+
+### Tasks
+
+* Add, edit and delete tasks
+* Mark tasks as completed
+* Recurring tasks
+
+### Family Members
+
+* Add, edit and delete family members
+
+### Calendar
+
+* Monthly navigation
+* Israeli holidays
+* Family events
+
+### Profile
+
+* Edit profile information
+* Change password
+
+---
+
+## 🛠 Tech Stack
+
+* React 19
+* Vite 8
+* React Router
+* Supabase
+* PostgreSQL
+* CSS
+* Vercel
+
+---
+
+## 🔗 External Services and Integrations
+
+| Service      | Purpose                     |
+| ------------ | --------------------------- |
+| Supabase     | Database and Authentication |
+| Supabase RLS | Security and access control |
+| Vercel       | Deployment                  |
+
+---
+
+## 📂 Database Tables
+
+* profiles
+* families
+* family_members
+* events
+* tasks
+
+---
+
+## ▶️ Getting Started
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+---
 
-## Project structure
+## 🚀 Deployment
 
-```
-src/
-├── components/     # Navbar, Footer, Layout, ProtectedRoute
-├── pages/          # One file per route
-├── styles/         # globals.css — design tokens & base styles
-├── data/           # dummyData.js (replaced by Supabase later)
-├── hooks/          # Custom React hooks
-└── lib/            # Supabase client and helpers (coming soon)
-```
+Hosted on Vercel.
 
-## Routes
+Push to `main` automatically triggers deployment.
 
-| Path | Page |
-|---|---|
-| `/` | Landing page |
-| `/login` | Login |
-| `/register` | Register |
-| `/dashboard` | Dashboard |
-| `/calendar` | Family calendar |
-| `/tasks` | Task list |
-| `/add-event` | Add event form |
-| `/family-members` | Family members |
-| `/profile` | User profile |
-| `/settings` | Settings |
+---
 
-## Deployment
+## 👩‍💻 Author
 
-Deployed on **Vercel**. Push to `main` triggers an automatic build.
-Repository: `github.com/<your-org>/family-time`
+Marine Shkuri
+
+Final Project – AI-Based Product Development Course
