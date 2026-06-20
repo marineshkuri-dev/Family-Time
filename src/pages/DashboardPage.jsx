@@ -1,7 +1,10 @@
 import Layout from '../components/Layout';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../hooks/useProfile';
+import { useFamily } from '../hooks/useFamily';
 import { useEvents } from '../hooks/useEvents';
+import { useTasks } from '../hooks/useTasks';
+import { useFamilyMembers } from '../hooks/useFamilyMembers';
 import './DashboardPage.css';
 
 function fmtDate(dateStr) {
@@ -9,9 +12,12 @@ function fmtDate(dateStr) {
 }
 
 export default function DashboardPage() {
-  const { user }              = useAuth();
+  const { user }    = useAuth();
   const { profile, loading: profileLoading } = useProfile();
-  const { events, loading: eventsLoading }   = useEvents({ upcoming: true });
+  const { familyId }                         = useFamily();
+  const { events,  loading: eventsLoading }  = useEvents({ upcoming: true });
+  const { tasks,   loading: tasksLoading }   = useTasks({ familyId });
+  const { members, loading: membersLoading } = useFamilyMembers({ familyId });
 
   const firstName = (profile?.full_name ?? user?.user_metadata?.full_name ?? '')
     .trim().split(' ')[0] || 'משתמש';
@@ -23,7 +29,13 @@ export default function DashboardPage() {
     return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
   }).length;
 
-  const upcomingThree = events.slice(0, 3);
+  const openTasks  = tasks.filter((t) => !t.done).length;
+  const doneTasks  = tasks.filter((t) =>  t.done).length;
+
+  const upcomingThree  = events.slice(0, 3);
+  const pendingThree   = tasks.filter((t) => !t.done).slice(0, 3);
+
+  const stat = (value, loading) => (loading ? '—' : value);
 
   return (
     <Layout>
@@ -42,10 +54,10 @@ export default function DashboardPage() {
 
         <div className="dashboard-stats grid-4">
           {[
-            { label: 'אירועים החודש', value: eventsLoading ? '—' : monthCount, icon: '📅', color: 'var(--color-primary)' },
-            { label: 'משימות פתוחות', value: 0,   icon: '✅', color: 'var(--color-accent)' },
-            { label: 'בני משפחה',     value: 0,   icon: '👨‍👩‍👧', color: '#5cb85c' },
-            { label: 'הושלמו השבוע',  value: 0,   icon: '🏆', color: '#9b59b6' },
+            { label: 'אירועים החודש', value: stat(monthCount,        eventsLoading),  icon: '📅', color: 'var(--color-primary)' },
+            { label: 'משימות פתוחות', value: stat(openTasks,         tasksLoading),   icon: '✅', color: 'var(--color-accent)'  },
+            { label: 'בני משפחה',     value: stat(members.length,    membersLoading), icon: '👨‍👩‍👧', color: '#5cb85c'              },
+            { label: 'משימות שהושלמו',value: stat(doneTasks,         tasksLoading),   icon: '🏆', color: '#9b59b6'              },
           ].map((s) => (
             <div key={s.label} className="stat-card card">
               <span className="stat-icon" style={{ color: s.color }}>{s.icon}</span>
@@ -56,6 +68,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="dashboard-grid">
+          {/* Upcoming events */}
           <section className="card">
             <h2 className="section-title">אירועים קרובים</h2>
 
@@ -86,12 +99,36 @@ export default function DashboardPage() {
             )}
           </section>
 
+          {/* Pending tasks */}
           <section className="card">
             <h2 className="section-title">משימות ממתינות</h2>
-            <div className="empty-state">
-              <span className="empty-icon">✅</span>
-              <p>אין משימות פתוחות</p>
-            </div>
+
+            {tasksLoading && <p className="text-muted">טוען...</p>}
+
+            {!tasksLoading && pendingThree.length === 0 && (
+              <div className="empty-state">
+                <span className="empty-icon">✅</span>
+                <p>אין משימות פתוחות</p>
+              </div>
+            )}
+
+            {!tasksLoading && pendingThree.length > 0 && (
+              <ul className="event-list">
+                {pendingThree.map((task) => (
+                  <li key={task.id} className="event-item">
+                    <span className="event-dot" style={{ background: 'var(--color-accent)' }} />
+                    <div className="event-info">
+                      <strong>{task.title}</strong>
+                      {task.due_date && (
+                        <span className="text-muted">
+                          עד {fmtDate(task.due_date)}
+                        </span>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         </div>
 
