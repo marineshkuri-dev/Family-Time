@@ -1,0 +1,52 @@
+.settings-page { display: flex; flex-direction: column; gap: var(--spacing-lg); max-width: 700px; }
+
+.settings-section { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
+.settings-section-title {
+  font-size: var(--font-size-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1.5px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+.settings-row:last-child { border-bottom: none; }
+
+.settings-label { flex: 1; }
+.settings-label strong { display: block; margin-bottom: 2px; }
+.text-muted { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+
+/* Toggle */
+.toggle-btn {
+  width: 48px; height: 26px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle-btn.on  { background: var(--color-primary); }
+.toggle-btn.off { background: var(--color-border); }
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: right 0.2s, left 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.toggle-btn.on  .toggle-thumb { right: 3px; left: auto; }
+.toggle-btn.off .toggle-thumb { left: 3px; right: auto; }
+
+.settings-danger { border: 1.5px solid var(--color-danger); }

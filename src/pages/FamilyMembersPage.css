@@ -1,0 +1,15 @@
+.family-page { display: flex; flex-direction: column; gap: var(--spacing-xl); }
+.family-header { display: flex; justify-content: space-between; align-items: center; }
+
+.member-card { display: flex; flex-direction: column; gap: var(--spacing-lg); }
+
+.member-top { display: flex; align-items: center; gap: var(--spacing-lg); }
+.member-info { display: flex; flex-direction: column; gap: var(--spacing-xs); }
+.member-info h2 { font-size: var(--font-size-xl); }
+
+.member-stats { display: flex; gap: var(--spacing-xl); }
+.member-stat { text-align: center; }
+.stat-num { display: block; font-size: 1.6rem; font-weight: 800; color: var(--color-primary); }
+.stat-lbl { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+
+.member-actions { display: flex; gap: var(--spacing-sm); }

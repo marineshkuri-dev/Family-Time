@@ -1,0 +1,76 @@
+.calendar-page { display: flex; flex-direction: column; gap: var(--spacing-xl); }
+
+.calendar-header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-md); }
+
+.calendar-legend { display: flex; gap: var(--spacing-md); flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: var(--font-size-sm); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.calendar-day-name {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-muted);
+  padding: var(--spacing-sm);
+  background: var(--color-bg);
+}
+
+.calendar-cell {
+  min-height: 90px;
+  padding: var(--spacing-sm);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.calendar-cell.empty { background: var(--color-bg); }
+.calendar-cell.today { background: rgba(74, 144, 217, 0.07); }
+
+.cell-day {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+.calendar-cell.today .cell-day {
+  background: var(--color-primary);
+  color: #fff;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.cell-event {
+  font-size: 0.7rem;
+  color: #fff;
+  border-radius: 4px;
+  padding: 1px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-list-full { list-style: none; display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.event-full-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.event-full-item:last-child { border-bottom: none; }
+.event-color-bar { width: 4px; border-radius: 2px; min-height: 40px; flex-shrink: 0; }
+.text-muted { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+
+@media (max-width: 600px) {
+  .calendar-cell { min-height: 60px; }
+  .cell-event { display: none; }
+}
