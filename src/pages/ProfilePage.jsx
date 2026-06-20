@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
+import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../hooks/useProfile';
 import { useFamily } from '../hooks/useFamily';
@@ -8,30 +9,28 @@ import { useTasks } from '../hooks/useTasks';
 import './ProfilePage.css';
 
 function getInitials(name, email) {
-  if (name) {
-    return name.trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-  }
+  if (name) return name.trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
   if (email) return email[0].toUpperCase();
   return 'מ';
 }
 
+const emptyPw = { current: '', next: '', confirm: '' };
+
 export default function ProfilePage() {
-  const { user }                                      = useAuth();
-  const { profile, loading, error, updateProfile }    = useProfile();
-  const { familyId }                                  = useFamily();
-  const { events }                                    = useEvents();
-  const { tasks }                                     = useTasks({ familyId });
+  const { user }                                   = useAuth();
+  const { profile, loading, error, updateProfile } = useProfile();
+  const { familyId }                               = useFamily();
+  const { events }                                 = useEvents();
+  const { tasks }                                  = useTasks({ familyId });
 
-  const [form, setForm]         = useState({ full_name: '' });
-  const [saving, setSaving]     = useState(false);
+  // ── Profile form ───────────────────────────────────────────────
+  const [form, setForm]           = useState({ full_name: '' });
+  const [saving, setSaving]       = useState(false);
   const [saveError, setSaveError] = useState('');
-  const [saved, setSaved]       = useState(false);
+  const [saved, setSaved]         = useState(false);
 
-  // Populate form when profile data arrives
   useEffect(() => {
-    if (profile) {
-      setForm({ full_name: profile.full_name ?? '' });
-    }
+    if (profile) setForm({ full_name: profile.full_name ?? '' });
   }, [profile]);
 
   const handleChange = (e) => {
@@ -40,19 +39,78 @@ export default function ProfilePage() {
     setSaveError('');
   };
 
-  const handleSubmit = async (e) => {
+  const handleProfileSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     setSaveError('');
-    const { error: saveErr } = await updateProfile({ full_name: form.full_name });
+    const { error: err } = await updateProfile({ full_name: form.full_name });
     setSaving(false);
-    if (saveErr) {
-      setSaveError(saveErr);
-    } else {
-      setSaved(true);
-    }
+    if (err) setSaveError(err);
+    else setSaved(true);
   };
 
+  // ── Password form ──────────────────────────────────────────────
+  const [pwForm, setPwForm]       = useState(emptyPw);
+  const [pwSaving, setPwSaving]   = useState(false);
+  const [pwError, setPwError]     = useState('');
+  const [pwSaved, setPwSaved]     = useState(false);
+
+  const handlePwChange = (e) => {
+    setPwForm({ ...pwForm, [e.target.name]: e.target.value });
+    setPwError('');
+    setPwSaved(false);
+  };
+
+  const handlePwSubmit = async (e) => {
+    e.preventDefault();
+    setPwError('');
+    setPwSaved(false);
+
+    // ── Client-side validation ─────────────────────────────────
+    if (!pwForm.current) {
+      return setPwError('נא להזין את הסיסמה הנוכחית');
+    }
+    if (pwForm.next.length < 6) {
+      return setPwError('הסיסמה החדשה חייבת להכיל לפחות 6 תווים');
+    }
+    if (pwForm.next !== pwForm.confirm) {
+      return setPwError('הסיסמאות החדשות אינן תואמות');
+    }
+    if (pwForm.next === pwForm.current) {
+      return setPwError('הסיסמה החדשה חייבת להיות שונה מהסיסמה הנוכחית');
+    }
+
+    setPwSaving(true);
+
+    // ── Step 1: verify current password by re-authenticating ───
+    const { error: authErr } = await supabase.auth.signInWithPassword({
+      email:    user.email,
+      password: pwForm.current,
+    });
+
+    if (authErr) {
+      setPwError('הסיסמה הנוכחית שגויה');
+      setPwSaving(false);
+      return;
+    }
+
+    // ── Step 2: update to new password ─────────────────────────
+    const { error: updateErr } = await supabase.auth.updateUser({
+      password: pwForm.next,
+    });
+
+    setPwSaving(false);
+
+    if (updateErr) {
+      setPwError(updateErr.message);
+      return;
+    }
+
+    setPwForm(emptyPw);
+    setPwSaved(true);
+  };
+
+  // ── Render ─────────────────────────────────────────────────────
   const displayName = profile?.full_name ?? user?.user_metadata?.full_name ?? '';
   const email       = profile?.email     ?? user?.email ?? '';
 
@@ -97,24 +155,22 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* ── Edit form ─────────────────────────────────────── */}
+          {/* ── Right column: two cards stacked ──────────────── */}
           <div className="profile-main">
+
+            {/* Card 1: edit name */}
             <div className="card">
-              <h2 className="section-title" style={{ fontSize: 'var(--font-size-lg)' }}>
-                עריכת פרטים
-              </h2>
+              <h2 className="profile-card-title">עריכת פרטים</h2>
 
               {saveError && <div className="auth-error">{saveError}</div>}
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleProfileSubmit}>
                 <div className="form-group">
                   <label htmlFor="full_name">שם מלא</label>
                   <input
                     id="full_name" name="full_name" type="text"
-                    className="input"
-                    placeholder="השם שלך"
-                    value={form.full_name}
-                    onChange={handleChange}
+                    className="input" placeholder="השם שלך"
+                    value={form.full_name} onChange={handleChange}
                     disabled={saving}
                   />
                 </div>
@@ -124,20 +180,9 @@ export default function ProfilePage() {
                   <input
                     id="p-email" name="email" type="email"
                     className="input profile-email-readonly"
-                    value={email}
-                    readOnly
+                    value={email} readOnly
                   />
                   <small className="text-muted">לא ניתן לשנות את האימייל</small>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="pw">שינוי סיסמה</label>
-                  <input
-                    id="pw" name="pw" type="password"
-                    className="input"
-                    placeholder="לא זמין כרגע"
-                    disabled
-                  />
                 </div>
 
                 <div className="profile-form-footer">
@@ -148,8 +193,62 @@ export default function ProfilePage() {
                 </div>
               </form>
             </div>
-          </div>
 
+            {/* Card 2: change password */}
+            <div className="card">
+              <h2 className="profile-card-title">שינוי סיסמה</h2>
+
+              {pwError  && <div className="auth-error">{pwError}</div>}
+              {pwSaved  && (
+                <div className="pw-success">✓ סיסמה עודכנה בהצלחה</div>
+              )}
+
+              <form onSubmit={handlePwSubmit} autoComplete="off">
+                <div className="form-group">
+                  <label htmlFor="pw-current">סיסמה נוכחית</label>
+                  <input
+                    id="pw-current" name="current" type="password"
+                    className="input" placeholder="הסיסמה הנוכחית שלך"
+                    value={pwForm.current} onChange={handlePwChange}
+                    disabled={pwSaving} autoComplete="current-password"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="pw-next">סיסמה חדשה</label>
+                  <input
+                    id="pw-next" name="next" type="password"
+                    className="input" placeholder="לפחות 6 תווים"
+                    value={pwForm.next} onChange={handlePwChange}
+                    disabled={pwSaving} autoComplete="new-password"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="pw-confirm">אישור סיסמה חדשה</label>
+                  <input
+                    id="pw-confirm" name="confirm" type="password"
+                    className="input" placeholder="הזן שוב את הסיסמה החדשה"
+                    value={pwForm.confirm} onChange={handlePwChange}
+                    disabled={pwSaving} autoComplete="new-password"
+                  />
+                  {/* Live match indicator */}
+                  {pwForm.next && pwForm.confirm && (
+                    <small className={pwForm.next === pwForm.confirm ? 'pw-match' : 'pw-mismatch'}>
+                      {pwForm.next === pwForm.confirm ? '✓ הסיסמאות תואמות' : '✗ הסיסמאות אינן תואמות'}
+                    </small>
+                  )}
+                </div>
+
+                <div className="profile-form-footer">
+                  <button type="submit" className="btn btn-primary" disabled={pwSaving}>
+                    {pwSaving ? 'מעדכן...' : 'עדכן סיסמה'}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
         </div>
       </div>
     </Layout>
