@@ -1,11 +1,6 @@
 .calendar-page { display: flex; flex-direction: column; gap: var(--spacing-xl); }
 
-.calendar-header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-md); }
-
-.calendar-legend { display: flex; gap: var(--spacing-md); flex-wrap: wrap; }
-.legend-item { display: flex; align-items: center; gap: 6px; font-size: var(--font-size-sm); }
-.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-
+/* Grid */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -51,6 +46,7 @@
 .cell-event {
   font-size: 0.7rem;
   color: #fff;
+  background: var(--color-primary);
   border-radius: 4px;
   padding: 1px 5px;
   white-space: nowrap;
@@ -58,19 +54,57 @@
   text-overflow: ellipsis;
 }
 
-.event-list-full { list-style: none; display: flex; flex-direction: column; gap: var(--spacing-sm); }
-.event-full-item {
+/* Event list */
+.event-list-full  { list-style: none; display: flex; flex-direction: column; }
+.event-full-item  {
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-md);
-  padding: var(--spacing-sm) 0;
+  padding: var(--spacing-md) 0;
   border-bottom: 1px solid var(--color-border);
 }
 .event-full-item:last-child { border-bottom: none; }
-.event-color-bar { width: 4px; border-radius: 2px; min-height: 40px; flex-shrink: 0; }
+
+.event-color-bar {
+  width: 4px;
+  border-radius: 2px;
+  min-height: 44px;
+  flex-shrink: 0;
+  background: var(--color-primary);
+  margin-top: 3px;
+}
+
+.event-full-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
 .text-muted { color: var(--color-text-muted); font-size: var(--font-size-sm); }
 
+.event-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+/* Edit / delete actions */
+.event-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+.confirm-text {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-danger);
+  white-space: nowrap;
+}
+
 @media (max-width: 600px) {
-  .calendar-cell { min-height: 60px; }
-  .cell-event { display: none; }
+  .calendar-cell  { min-height: 60px; }
+  .cell-event     { display: none; }
+  .event-actions  { flex-direction: column; align-items: flex-end; }
 }

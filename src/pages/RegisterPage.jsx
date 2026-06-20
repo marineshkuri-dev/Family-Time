@@ -4,10 +4,10 @@ import { supabase } from '../lib/supabase';
 import './AuthPages.css';
 
 const AUTH_ERRORS = {
-  'User already registered':                     'כתובת האימייל כבר רשומה במערכת',
-  'Password should be at least 6 characters':    'הסיסמה חייבת להכיל לפחות 6 תווים',
-  'Unable to validate email address':            'כתובת אימייל לא תקינה',
-  'Too many requests':                           'יותר מדי ניסיונות, אנא המתן מספר דקות',
+  'User already registered':                  'כתובת האימייל כבר רשומה במערכת',
+  'Password should be at least 6 characters': 'הסיסמה חייבת להכיל לפחות 6 תווים',
+  'Unable to validate email address':         'כתובת אימייל לא תקינה',
+  'Too many requests':                        'יותר מדי ניסיונות, אנא המתן מספר דקות',
 };
 const toHebrew = (msg) => {
   for (const [key, val] of Object.entries(AUTH_ERRORS)) {
@@ -15,6 +15,12 @@ const toHebrew = (msg) => {
   }
   return 'אירעה שגיאה, אנא נסו שוב';
 };
+
+function buildFamilyName(fullName) {
+  const parts    = fullName.trim().split(' ').filter(Boolean);
+  const lastName = parts.length > 1 ? parts[parts.length - 1] : parts[0] ?? '';
+  return lastName ? `משפחת ${lastName}` : 'המשפחה שלי';
+}
 
 export default function RegisterPage() {
   const navigate  = useNavigate();
@@ -42,6 +48,7 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
 
+    // ── 1. Create the auth user ───────────────────────────────────────────
     const { data, error: authError } = await supabase.auth.signUp({
       email:    form.email.trim(),
       password: form.password,
@@ -54,8 +61,8 @@ export default function RegisterPage() {
       return;
     }
 
-    // Create profile row — best-effort, wrapped in try/catch
     if (data.user) {
+      // ── 2. Create the profile row ─────────────────────────────────────
       try {
         await supabase.from('profiles').upsert({
           id:        data.user.id,
@@ -63,7 +70,22 @@ export default function RegisterPage() {
           email:     form.email.trim(),
         });
       } catch (_) {
-        // Profile insert is non-critical; auth succeeded
+        // Non-critical — profile can be created later
+      }
+
+      // ── 3. Create the family + member row (atomic via RPC) ────────────
+      // Only possible when Supabase returns a session immediately
+      // (i.e. email confirmation is disabled in your Supabase project).
+      // If email confirmation is enabled, data.session is null here and
+      // useFamily will create the family on the user's first login instead.
+      if (data.session) {
+        const { error: rpcErr } = await supabase.rpc('create_family_for_user', {
+          family_name: buildFamilyName(form.name),
+        });
+        if (rpcErr) {
+          // Non-fatal: useFamily hook will retry on first dashboard load
+          console.warn('RegisterPage: family creation failed:', rpcErr.message);
+        }
       }
     }
 
