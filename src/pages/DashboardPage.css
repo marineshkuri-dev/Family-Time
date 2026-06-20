@@ -41,6 +41,18 @@
 .priority-mid   { background: var(--color-warning); }
 .priority-low   { background: var(--color-success); }
 
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl) var(--spacing-md);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+.empty-icon { font-size: 2rem; opacity: 0.45; }
+
 @media (max-width: 700px) {
   .dashboard-grid { grid-template-columns: 1fr; }
 }

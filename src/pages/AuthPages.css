@@ -54,3 +54,21 @@
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
+
+.auth-error {
+  background: #fde8e8;
+  color: var(--color-danger);
+  border: 1px solid #f5c6c6;
+  border-radius: var(--radius-sm);
+  padding: 10px var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+.btn:disabled,
+.auth-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

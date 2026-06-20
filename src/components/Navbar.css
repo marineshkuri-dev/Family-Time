@@ -66,6 +66,8 @@
 
 .btn-sm { padding: 6px 16px; font-size: var(--font-size-sm); }
 
+.logout-btn { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+
 .navbar-avatar {
   cursor: pointer;
   text-decoration: none;
@@ -125,7 +127,20 @@
 
 @media (max-width: 700px) {
   .navbar-links { display: none; }
-  .hamburger { display: flex; }
-  .brand-name { font-size: 1rem; }
-  .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
+  .logout-btn   { display: none; }
+  .hamburger    { display: flex; }
+  .brand-name   { font-size: 1rem; }
+  .btn-sm       { padding: 6px 10px; font-size: 0.78rem; }
+}
+
+.mobile-logout {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: right;
+  cursor: pointer;
+  color: var(--color-danger);
+  font-family: var(--font-family);
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--spacing-xs);
 }

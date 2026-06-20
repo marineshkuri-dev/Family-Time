@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { currentUser } from '../data/dummyData';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 const navLinks = [
@@ -11,17 +12,25 @@ const navLinks = [
   { to: '/settings',       label: 'הגדרות' },
 ];
 
+function getInitials(user) {
+  const name = user?.user_metadata?.full_name || user?.email || '';
+  if (name.includes('@')) return name[0].toUpperCase();
+  return name.split(' ').filter(Boolean).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
 export default function Navbar() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location  = useLocation();
+  const navigate  = useNavigate();
+  const { user }  = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const initials = currentUser.name
-    .split(' ')
-    .map((w) => w[0])
-    .join('');
-
   const closeMenu = () => setMenuOpen(false);
+
+  const handleLogout = async () => {
+    closeMenu();
+    await supabase.auth.signOut();
+    navigate('/login');
+  };
 
   return (
     <header className="navbar">
@@ -51,8 +60,11 @@ export default function Navbar() {
             + אירוע חדש
           </button>
           <Link to="/profile" className="navbar-avatar avatar avatar-sm" onClick={closeMenu}>
-            {initials}
+            {getInitials(user)}
           </Link>
+          <button className="btn btn-ghost btn-sm logout-btn" onClick={handleLogout}>
+            יציאה
+          </button>
           <button
             className="hamburger"
             aria-label="תפריט"
@@ -76,6 +88,9 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          <button className="mobile-nav-link mobile-logout" onClick={handleLogout}>
+            יציאה מהמערכת
+          </button>
         </nav>
       )}
     </header>

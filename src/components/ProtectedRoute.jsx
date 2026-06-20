@@ -1,11 +1,19 @@
 import { Navigate } from 'react-router-dom';
-
-// Placeholder — replace with real auth check once Supabase is added
-const isAuthenticated = () => true;
+import { useAuth } from '../context/AuthContext';
+import './ProtectedRoute.css';
 
 export default function ProtectedRoute({ children }) {
-  if (!isAuthenticated()) {
-    return <Navigate to="/login" replace />;
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="page-loading">
+        <div className="page-loading-spinner" />
+        <p>טוען...</p>
+      </div>
+    );
   }
+
+  if (!user) return <Navigate to="/login" replace />;
   return children;
 }
