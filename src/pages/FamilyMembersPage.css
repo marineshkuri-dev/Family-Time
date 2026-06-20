@@ -1,15 +1,50 @@
-.family-page { display: flex; flex-direction: column; gap: var(--spacing-xl); }
+.family-page   { display: flex; flex-direction: column; gap: var(--spacing-xl); }
 .family-header { display: flex; justify-content: space-between; align-items: center; }
 
 .member-card { display: flex; flex-direction: column; gap: var(--spacing-lg); }
 
-.member-top { display: flex; align-items: center; gap: var(--spacing-lg); }
-.member-info { display: flex; flex-direction: column; gap: var(--spacing-xs); }
-.member-info h2 { font-size: var(--font-size-xl); }
+.member-top  { display: flex; align-items: center; gap: var(--spacing-lg); }
+.member-info { display: flex; flex-direction: column; gap: var(--spacing-xs); flex: 1; min-width: 0; }
+.member-info h2 {
+  font-size: var(--font-size-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
 
+.member-me-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: #e8f0fe;
+  border-radius: var(--radius-full);
+  padding: 1px 8px;
+}
+
+.member-email {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.confirm-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Kept for potential future use */
 .member-stats { display: flex; gap: var(--spacing-xl); }
-.member-stat { text-align: center; }
+.member-stat  { text-align: center; }
 .stat-num { display: block; font-size: 1.6rem; font-weight: 800; color: var(--color-primary); }
 .stat-lbl { font-size: var(--font-size-sm); color: var(--color-text-muted); }
-
-.member-actions { display: flex; gap: var(--spacing-sm); }
