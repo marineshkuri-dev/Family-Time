@@ -24,3 +24,9 @@
   align-items: flex-start;
   max-width: 680px;
 }
+
+.form-divider {
+  border: none;
+  border-top: 1.5px solid var(--color-border);
+  margin: var(--spacing-sm) 0;
+}

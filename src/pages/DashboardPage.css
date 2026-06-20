@@ -4,14 +4,50 @@
 .dashboard-welcome h1 { font-size: var(--font-size-2xl); }
 .text-muted { color: var(--color-text-muted); font-size: var(--font-size-sm); }
 
+/* ── Stat cards ─────────────────────────────────────────────────────────── */
 .dashboard-stats { margin-top: 0; }
-.stat-card { text-align: center; display: flex; flex-direction: column; gap: var(--spacing-xs); }
+
+.stat-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.stat-card-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.stat-card-link:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
 .stat-icon  { font-size: 2rem; }
 .stat-value { font-size: 2rem; font-weight: 800; }
 .stat-label { color: var(--color-text-muted); font-size: var(--font-size-sm); }
 
+/* ── Dashboard grid ─────────────────────────────────────────────────────── */
 .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); }
 
+/* ── Section headers ────────────────────────────────────────────────────── */
+.dash-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+.dash-see-all {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.dash-see-all:hover { text-decoration: underline; }
+
+/* ── Event/task list ────────────────────────────────────────────────────── */
 .event-list { list-style: none; display: flex; flex-direction: column; gap: var(--spacing-md); }
 
 .event-item {
@@ -33,6 +69,28 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+}
+
+.dash-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.dash-task-check {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.dash-item-edit {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  padding: 3px 8px;
 }
 
 @media (max-width: 700px) {

@@ -1,16 +1,21 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import RecurrencePicker from './RecurrencePicker';
 import './EventModal.css';
 import './TaskModal.css';
 
-const empty = { title: '', description: '', due_date: '' };
-
 function toForm(task) {
-  if (!task) return empty;
+  if (!task) return {
+    title: '', description: '', due_date: '',
+    recurrence_type: 'none', recurrence_days: [], recurrence_end_date: '',
+  };
   return {
-    title:       task.title       ?? '',
-    description: task.description ?? '',
-    due_date:    task.due_date    ?? '',
+    title:               task.title               ?? '',
+    description:         task.description         ?? '',
+    due_date:            task.due_date             ?? '',
+    recurrence_type:     task.recurrence_type      ?? 'none',
+    recurrence_days:     task.recurrence_days      ?? [],
+    recurrence_end_date: task.recurrence_end_date  ?? '',
   };
 }
 
@@ -25,31 +30,31 @@ export default function TaskModal({ task = null, familyId, userId, onClose, onSa
     setError('');
   };
 
+  const handleRecurrence = (rec) => setForm({ ...form, ...rec });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     const payload = {
-      title:       form.title,
-      description: form.description || null,
-      due_date:    form.due_date    || null,
+      title:               form.title,
+      description:         form.description          || null,
+      due_date:            form.due_date              || null,
+      recurrence_type:     form.recurrence_type       || 'none',
+      recurrence_days:     form.recurrence_days.length ? form.recurrence_days : null,
+      recurrence_end_date: form.recurrence_end_date   || null,
     };
 
     let result;
     if (isEdit) {
       result = await supabase
-        .from('tasks')
-        .update(payload)
-        .eq('id', task.id)
-        .select()
-        .single();
+        .from('tasks').update(payload).eq('id', task.id).select().single();
     } else {
       result = await supabase
         .from('tasks')
         .insert({ ...payload, family_id: familyId, created_by: userId, is_completed: false })
-        .select()
-        .single();
+        .select().single();
     }
 
     const { data, error: dbErr } = result;
@@ -104,6 +109,18 @@ export default function TaskModal({ task = null, familyId, userId, onClose, onSa
               onChange={handleChange} disabled={loading}
             />
           </div>
+
+          <hr style={{ border: 'none', borderTop: '1.5px solid var(--color-border)', margin: '4px 0' }} />
+
+          <RecurrencePicker
+            value={{
+              recurrence_type:     form.recurrence_type,
+              recurrence_days:     form.recurrence_days,
+              recurrence_end_date: form.recurrence_end_date,
+            }}
+            onChange={handleRecurrence}
+            disabled={loading}
+          />
 
           <div className="modal-actions">
             <button type="button" className="btn btn-ghost" onClick={onClose} disabled={loading}>

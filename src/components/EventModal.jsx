@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import RecurrencePicker from './RecurrencePicker';
 import './EventModal.css';
 
 export default function EventModal({ event, onClose, onSaved }) {
   const [form, setForm] = useState({
-    title:       event.title       ?? '',
-    event_date:  event.event_date  ?? '',
-    event_time:  event.event_time  ? event.event_time.slice(0, 5) : '',
-    location:    event.location    ?? '',
-    description: event.description ?? '',
+    title:               event.title               ?? '',
+    event_date:          event.event_date           ?? '',
+    event_time:          event.event_time  ? event.event_time.slice(0, 5) : '',
+    location:            event.location             ?? '',
+    description:         event.description          ?? '',
+    recurrence_type:     event.recurrence_type      ?? 'none',
+    recurrence_days:     event.recurrence_days      ?? [],
+    recurrence_end_date: event.recurrence_end_date  ?? '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
@@ -18,6 +22,8 @@ export default function EventModal({ event, onClose, onSaved }) {
     setError('');
   };
 
+  const handleRecurrence = (rec) => setForm({ ...form, ...rec });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -26,16 +32,19 @@ export default function EventModal({ event, onClose, onSaved }) {
     const { error: updateError } = await supabase
       .from('events')
       .update({
-        title:       form.title,
-        event_date:  form.event_date,
-        event_time:  form.event_time  || null,
-        location:    form.location    || null,
-        description: form.description || null,
+        title:               form.title,
+        event_date:          form.event_date,
+        event_time:          form.event_time           || null,
+        location:            form.location             || null,
+        description:         form.description          || null,
+        recurrence_type:     form.recurrence_type      || 'none',
+        recurrence_days:     form.recurrence_days.length ? form.recurrence_days : null,
+        recurrence_end_date: form.recurrence_end_date  || null,
       })
       .eq('id', event.id);
 
     if (updateError) {
-      setError('שגיאה בעדכון האירוע, אנא נסו שוב');
+      setError(updateError.message);
       setLoading(false);
       return;
     }
@@ -100,6 +109,18 @@ export default function EventModal({ event, onClose, onSaved }) {
               value={form.description} onChange={handleChange} disabled={loading}
             />
           </div>
+
+          <hr style={{ border: 'none', borderTop: '1.5px solid var(--color-border)', margin: '4px 0' }} />
+
+          <RecurrencePicker
+            value={{
+              recurrence_type:     form.recurrence_type,
+              recurrence_days:     form.recurrence_days,
+              recurrence_end_date: form.recurrence_end_date,
+            }}
+            onChange={handleRecurrence}
+            disabled={loading}
+          />
 
           <div className="modal-actions">
             <button type="button" className="btn btn-ghost" onClick={onClose} disabled={loading}>

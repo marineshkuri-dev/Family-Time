@@ -9,6 +9,7 @@ import DashboardPage     from './pages/DashboardPage';
 import CalendarPage      from './pages/CalendarPage';
 import TasksPage         from './pages/TasksPage';
 import AddEventPage      from './pages/AddEventPage';
+import EventsPage        from './pages/EventsPage';
 import FamilyMembersPage from './pages/FamilyMembersPage';
 import ProfilePage       from './pages/ProfilePage';
 import SettingsPage      from './pages/SettingsPage';
@@ -26,6 +27,7 @@ export default function App() {
           {/* Protected */}
           <Route path="/dashboard"      element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/calendar"       element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+          <Route path="/events"         element={<ProtectedRoute><EventsPage /></ProtectedRoute>} />
           <Route path="/tasks"          element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
           <Route path="/add-event"      element={<ProtectedRoute><AddEventPage /></ProtectedRoute>} />
           <Route path="/family-members" element={<ProtectedRoute><FamilyMembersPage /></ProtectedRoute>} />

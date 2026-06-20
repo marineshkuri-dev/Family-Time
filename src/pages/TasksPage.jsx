@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Layout from '../components/Layout';
 import TaskModal from '../components/TaskModal';
+import RecurrenceBadge from '../components/RecurrenceBadge';
 import { useAuth } from '../context/AuthContext';
 import { useFamily } from '../hooks/useFamily';
 import { useTasks } from '../hooks/useTasks';
@@ -111,7 +112,10 @@ export default function TasksPage() {
 
                 {/* Info */}
                 <div className="task-row-info">
-                  <strong className="task-title">{task.title}</strong>
+                  <span className="task-title-row">
+                    <strong className="task-title">{task.title}</strong>
+                    <RecurrenceBadge type={task.recurrence_type} />
+                  </span>
                   {task.description && (
                     <span className="task-desc">{task.description}</span>
                   )}

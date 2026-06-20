@@ -7,6 +7,7 @@ import './Navbar.css';
 const navLinks = [
   { to: '/dashboard',      label: 'ראשי' },
   { to: '/calendar',       label: 'לוח שנה' },
+  { to: '/events',         label: 'אירועים' },
   { to: '/tasks',          label: 'משימות' },
   { to: '/family-members', label: 'בני משפחה' },
   { to: '/settings',       label: 'הגדרות' },

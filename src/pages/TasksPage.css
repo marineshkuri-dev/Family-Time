@@ -26,8 +26,9 @@
   margin-top: 3px;
 }
 
-.task-row-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.task-title { font-size: var(--font-size-base); }
+.task-row-info  { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.task-title-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.task-title     { font-size: var(--font-size-base); }
 .task-desc  {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
