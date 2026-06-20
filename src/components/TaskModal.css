@@ -1,0 +1,11 @@
+/* TaskModal reuses the shared modal classes from EventModal.css.
+   The .modal-overlay, .modal-card, .modal-header, .modal-close,
+   .modal-form, .modal-actions, and @keyframes modal-in are defined there.
+   This file holds task-specific overrides only. */
+
+.task-modal-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: calc(-1 * var(--spacing-xs));
+  margin-bottom: var(--spacing-xs);
+}

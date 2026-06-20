@@ -29,11 +29,11 @@ export default function DashboardPage() {
     return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
   }).length;
 
-  const openTasks  = tasks.filter((t) => !t.done).length;
-  const doneTasks  = tasks.filter((t) =>  t.done).length;
+  const openTasks  = tasks.filter((t) => !t.is_completed).length;
+  const doneTasks  = tasks.filter((t) =>  t.is_completed).length;
 
   const upcomingThree  = events.slice(0, 3);
-  const pendingThree   = tasks.filter((t) => !t.done).slice(0, 3);
+  const pendingThree   = tasks.filter((t) => !t.is_completed).slice(0, 3);
 
   const stat = (value, loading) => (loading ? '—' : value);
 
