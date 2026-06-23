@@ -1,140 +1,151 @@
 # Family Time 🏠
 
-A responsive Hebrew RTL web application for managing family schedules, events and tasks.
-
 ## 🌐 Live Demo
 
-https://family-time-7jp8-m8hkx7800-family-time.vercel.app
+https://family-time-itkhug0nm-family-time.vercel.app
 
 ---
 
-## 📌 Overview
+# 📌 Overview
 
-Family Time is a web application that helps families organize their daily life in one place.
-
-The system allows users to manage:
-
-* Events
-* Tasks
-* Family members
-* Shared calendar
-* Recurring events and tasks
-* Profile settings
+Family Time is a responsive web application designed to help families manage their daily routines in one place. The system allows users to manage events, tasks, family members and a shared calendar, including recurring activities and profile settings.
 
 ---
 
-## 🎯 Problem Statement
+# 🎯 Problem Statement
 
-Families often use multiple tools such as WhatsApp groups, calendars and notes, making coordination difficult.
+Families often use multiple tools such as WhatsApp groups, notes and calendars to coordinate daily life. This makes communication and organization difficult.
 
 Family Time centralizes family management into one platform.
 
 ---
 
-## 👨‍👩‍👧‍👦 Target Audience
+# 👨‍👩‍👧‍👦 Target Audience
 
-Families who want a simple and organized way to manage:
+Families who want an organized and simple way to manage:
 
-* Shared schedules
-* Events
-* Tasks
-* Weekly routines
-
----
-
-## 🏆 Competitors
-
-* Google Calendar
-* WhatsApp groups
-* FamilyWall
-* Notes applications
-* Manual spreadsheets
+- Shared schedules
+- Events
+- Tasks
+- Weekly routines
+- Family activities
 
 ---
 
-## ⭐ Competitive Advantage
+# 🔍 Competitors and Differentiation
 
-Family Time combines task management, recurring events, family members, shared calendar and Israeli holidays in one platform with a responsive Hebrew RTL interface.
+## Existing solutions
 
----
+- Google Calendar
+- Any.do
+- WhatsApp Groups
+- Paper notes and manual planning
 
-## 🚀 Main Features
+## Differentiation
 
-### Authentication
+Family Time combines:
 
-* Register
-* Login
-* Logout
-* Change password
+- Shared family calendar
+- Event management
+- Task management
+- Family members management
+- Hebrew RTL interface
+- Responsive design for desktop and mobile
 
-### Dashboard
-
-* Summary cards
-* Upcoming events
-* Pending tasks
-* Quick navigation
-
-### Events
-
-* Add, edit and delete events
-* Recurring events
-
-### Tasks
-
-* Add, edit and delete tasks
-* Mark tasks as completed
-* Recurring tasks
-
-### Family Members
-
-* Add, edit and delete family members
-
-### Calendar
-
-* Monthly navigation
-* Israeli holidays
-* Family events
-
-### Profile
-
-* Edit profile information
-* Change password
+All in one place.
 
 ---
 
-## 🛠 Tech Stack
+# 🚀 Main Features
 
-* React 19
-* Vite 8
-* React Router
-* Supabase
-* PostgreSQL
-* CSS
-* Vercel
+## Authentication
+
+- Register
+- Login
+- Logout
+
+## Dashboard
+
+- Summary cards
+- Upcoming events
+- Pending tasks
+- Quick navigation
+
+## Events
+
+- Add events
+- Edit events
+- Delete events
+- Recurring events
+
+## Tasks
+
+- Add tasks
+- Edit tasks
+- Delete tasks
+- Mark tasks as completed
+- Recurring tasks
+
+## Family Members
+
+- Add family members
+- Edit family members
+- Delete family members
+
+## Calendar
+
+- Monthly calendar view
+- Navigation between months
+- Family events display
+
+## Profile
+
+- Edit profile information
 
 ---
 
-## 🔗 External Services and Integrations
+# 🛠 Tech Stack
 
-| Service      | Purpose                     |
-| ------------ | --------------------------- |
-| Supabase     | Database and Authentication |
-| Supabase RLS | Security and access control |
-| Vercel       | Deployment                  |
-
----
-
-## 📂 Database Tables
-
-* profiles
-* families
-* family_members
-* events
-* tasks
+- React 19
+- Vite
+- React Router
+- Supabase
+- PostgreSQL
+- CSS
+- Vercel
 
 ---
 
-## ▶️ Getting Started
+# 🔗 External Services and Integrations
+
+| Service | Type | Purpose |
+|-----------|------|---------|
+| Supabase | Database + Authentication | User management and data storage |
+| PostgreSQL | Database | Stores events, tasks and family members |
+| Vercel | Deployment | Hosting the application |
+| GitHub | Version Control | Source code management |
+
+---
+
+# 🗄 Database Tables
+
+- profiles
+- families
+- family_members
+- events
+- tasks
+
+---
+
+# 📊 ERD (Entity Relationship Diagram)
+
+The following diagram describes the database schema implemented in Supabase.
+
+![ERD](ERD_Family_Time.png)
+
+---
+
+# ▶️ Getting Started
 
 ```bash
 npm install
@@ -143,29 +154,19 @@ npm run dev
 
 ---
 
-## 🚀 Deployment
+# 🚀 Deployment
 
 Hosted on Vercel.
 
-Push to `main` automatically triggers deployment.
+Push to the main branch automatically triggers deployment.
+
+Live URL:
+
+https://family-time-itkhug0nm-family-time.vercel.app
 
 ---
 
-## Repository
-
-GitHub Repository:
-
-https://github.com/marineshkuri-dev/Family-Time
-
----
-
-## Live Demo
-
-https://family-time-7jp8-m8hkx7800-family-time.vercel.app
-
----
-
-## 👩‍💻 Author
+# 👩‍💻 Author
 
 Marine Shkuri
 
