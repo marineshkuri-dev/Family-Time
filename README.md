@@ -42,6 +42,22 @@ Families who want a simple and organized way to manage:
 
 ---
 
+## 🏆 Competitors
+
+* Google Calendar
+* WhatsApp groups
+* FamilyWall
+* Notes applications
+* Manual spreadsheets
+
+---
+
+## ⭐ Competitive Advantage
+
+Family Time combines task management, recurring events, family members, shared calendar and Israeli holidays in one platform with a responsive Hebrew RTL interface.
+
+---
+
 ## 🚀 Main Features
 
 ### Authentication
@@ -132,6 +148,20 @@ npm run dev
 Hosted on Vercel.
 
 Push to `main` automatically triggers deployment.
+
+---
+
+## Repository
+
+GitHub Repository:
+
+https://github.com/marineshkuri-dev/Family-Time
+
+---
+
+## Live Demo
+
+https://family-time-7jp8-m8hkx7800-family-time.vercel.app
 
 ---
 

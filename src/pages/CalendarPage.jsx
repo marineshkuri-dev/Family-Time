@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Layout from '../components/Layout';
 import { useAuth } from '../context/AuthContext';
 import { useFamily } from '../hooks/useFamily';
 import { useEvents } from '../hooks/useEvents';
+import { useTasks } from '../hooks/useTasks';
 import { supabase } from '../lib/supabase';
 import EventModal from '../components/EventModal';
 import RecurrenceBadge from '../components/RecurrenceBadge';
@@ -34,6 +35,8 @@ export default function CalendarPage() {
   const { familyId }          = useFamily();
   // Fetch all family events (all dates, no upcoming filter)
   const { events, loading, refetch } = useEvents({ familyId });
+  // Fetch all family tasks
+  const { tasks, loading: tasksLoading, toggleComplete: toggleTask } = useTasks({ familyId });
 
   const [viewYear,  setViewYear]  = useState(realToday.getFullYear());
   const [viewMonth, setViewMonth] = useState(realToday.getMonth());
@@ -72,7 +75,39 @@ export default function CalendarPage() {
     [events, viewYear, viewMonth]
   );
 
+  // Tasks whose due_date falls in the viewed month
+  const dayToTasks = useMemo(() => {
+    const map = {};
+    tasks.forEach((task) => {
+      if (!task.due_date) return;
+      const d = new Date(task.due_date + 'T12:00:00');
+      if (d.getFullYear() === viewYear && d.getMonth() === viewMonth) {
+        const day = d.getDate();
+        if (!map[day]) map[day] = [];
+        map[day].push(task);
+      }
+    });
+    return map;
+  }, [tasks, viewYear, viewMonth]);
+
+  const tasksInView = useMemo(() =>
+    tasks.filter((task) => {
+      if (!task.due_date) return false;
+      const d = new Date(task.due_date + 'T12:00:00');
+      return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
+    }),
+    [tasks, viewYear, viewMonth]
+  );
+
   const isCurrentMonth = viewYear === realToday.getFullYear() && viewMonth === realToday.getMonth();
+
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log(
+        `[CalendarPage] month: ${MONTHS_HE[viewMonth]} ${viewYear} | familyId: ${familyId ?? '(loading)'} | events: ${events.length} | tasks: ${tasks.length}`,
+      );
+    }
+  }, [viewMonth, viewYear, familyId, events.length, tasks.length]);
 
   const handleDelete = async (id) => {
     setDeleteLoading(true);
@@ -115,6 +150,7 @@ export default function CalendarPage() {
           {cells.map((day, i) => {
             const dayEvents   = day ? (dayToEvents[day] ?? []) : [];
             const dayHolidays = day ? (holidays[day]    ?? []) : [];
+            const dayTasks    = day ? (dayToTasks[day]  ?? []) : [];
             const isToday     = isCurrentMonth && day === realToday.getDate();
 
             return (
@@ -141,6 +177,17 @@ export default function CalendarPage() {
                   <span key={`${ev.id}-${day}`} className="cell-event" title={ev.title}>
                     {ev.recurrence_type && ev.recurrence_type !== 'none' && '🔁 '}
                     {ev.title}
+                  </span>
+                ))}
+
+                {/* Tasks due on this day */}
+                {dayTasks.map((task) => (
+                  <span
+                    key={`t-${task.id}-${day}`}
+                    className={`cell-task${task.is_completed ? ' cell-task-done' : ''}`}
+                    title={task.title}
+                  >
+                    {task.title}
                   </span>
                 ))}
               </div>
@@ -221,6 +268,60 @@ export default function CalendarPage() {
                         </button>
                       </>
                     )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {/* ── Task list for this month ─────────────────────────── */}
+        <section className="calendar-event-list card">
+          <h2 className="section-title">משימות {MONTHS_HE[viewMonth]}</h2>
+
+          {tasksLoading && <p className="text-muted">טוען משימות...</p>}
+
+          {!tasksLoading && tasksInView.length === 0 && (
+            <div className="empty-state">
+              <span className="empty-icon">✅</span>
+              <p>אין משימות בחודש זה</p>
+            </div>
+          )}
+
+          {!tasksLoading && tasksInView.length > 0 && (
+            <ul className="event-list-full">
+              {tasksInView.map((task) => (
+                <li key={task.id} className="event-full-item">
+                  <span className="event-color-bar task-color-bar" />
+                  <div className="event-full-info">
+                    <div className="event-title-row">
+                      <strong style={{
+                        textDecoration: task.is_completed ? 'line-through' : 'none',
+                        opacity: task.is_completed ? 0.6 : 1,
+                      }}>
+                        {task.title}
+                      </strong>
+                      <RecurrenceBadge type={task.recurrence_type} />
+                      {task.is_completed && (
+                        <span className="badge badge-success" style={{ fontSize: '0.72rem' }}>הושלם</span>
+                      )}
+                    </div>
+                    <p className="text-muted">
+                      עד {fmtDate(task.due_date)}
+                      {task.priority && ` · ${task.priority}`}
+                    </p>
+                    {task.description && (
+                      <p className="event-description">{task.description}</p>
+                    )}
+                  </div>
+                  <div className="event-actions">
+                    <input
+                      type="checkbox"
+                      className="cal-task-check"
+                      checked={!!task.is_completed}
+                      title={task.is_completed ? 'סמן כפתוחה' : 'סמן כהושלמה'}
+                      onChange={() => toggleTask(task.id, task.is_completed)}
+                    />
                   </div>
                 </li>
               ))}

@@ -40,8 +40,13 @@ export function useEvents({ upcoming = false, familyId = null } = {}) {
     }
 
     const { data, error: fetchError } = await query;
-    if (fetchError) setError(fetchError.message);
-    else setEvents(data ?? []);
+    if (fetchError) {
+      setError(fetchError.message);
+      if (import.meta.env.DEV) console.error('[useEvents] fetch error:', fetchError.message);
+    } else {
+      setEvents(data ?? []);
+      if (import.meta.env.DEV) console.log('[useEvents] fetched', (data ?? []).length, 'events — familyId:', familyId ?? '(none)');
+    }
     setLoading(false);
   }, [user, upcoming, familyId]);
 

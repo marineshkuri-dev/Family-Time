@@ -17,8 +17,13 @@ export function useTasks({ familyId = null } = {}) {
       .eq('family_id', familyId)
       .order('created_at', { ascending: false });
 
-    if (fetchErr) setError(fetchErr.message);
-    else setTasks(data ?? []);
+    if (fetchErr) {
+      setError(fetchErr.message);
+      if (import.meta.env.DEV) console.error('[useTasks] fetch error:', fetchErr.message);
+    } else {
+      setTasks(data ?? []);
+      if (import.meta.env.DEV) console.log('[useTasks] fetched', (data ?? []).length, 'tasks — familyId:', familyId);
+    }
     setLoading(false);
   }, [familyId]);
 
