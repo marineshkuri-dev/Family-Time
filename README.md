@@ -141,7 +141,7 @@ All in one place.
 
 The following diagram describes the database schema implemented in Supabase.
 
-![ERD](ERD_Family_Time.png)
+![ERD](ERD_Family_Time.png.png)
 
 ---
 
